@@ -1,19 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+import React, { useState } from 'react';
+import { render } from 'react-dom';
+import { AgGridColumn, AgGridReact } from 'ag-grid-react';
+
+import 'ag-grid-enterprise';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import Navbar from "./components/navbar";
 
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const App = () => {
+    const [gridApi, setGridApi] = useState(null);
+    const [gridColumnApi, setGridColumnApi] = useState(null);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+    const [rowData, setRowData] = useState([
+        {first: "Solana", last: "Rowe", title: "apprentice"},
+        {first: "Britney", last: "Spears", title: "manager"},
+        {first: "Beyonce", last: "Knowles", title: "performer"}
+    ]);
+
+    function onGridReady(params) {
+        setGridApi(params.api);
+        setGridColumnApi(params.columnApi);
+    }
+
+    return (
+      
+        <div className="ag-theme-alpine" style={ { height: 400, width: 600 } }>
+          <Navbar />
+            <AgGridReact
+                onGridReady={onGridReady}
+                rowData={rowData}>
+                <AgGridColumn field="first" sortable={true} filter={true}></AgGridColumn>
+                <AgGridColumn field="last" sortable={true} filter={true}></AgGridColumn>
+                <AgGridColumn field="title" sortable={true} filter={true}></AgGridColumn>
+            </AgGridReact>
+        </div>
+    );
+};
+
+render(<App />, document.getElementById('root'));
